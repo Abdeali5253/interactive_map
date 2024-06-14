@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { ReactComponent as MySvg } from "../utils/svgs/mas.svg";
 import 'bootstrap/dist/css/bootstrap.min.css'; // Ensure Bootstrap CSS is imported
-import "./src/utils/svgs/mas.svg"; // Assuming this file might still contain other necessary custom styles
+import "../utils/styling/MapView.css"; // Assuming this file might still contain other necessary custom styles
 
 function MapView() {
   const [visibility, setVisibility] = useState({
