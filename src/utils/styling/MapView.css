@@ -1,14 +1,7 @@
-/* MapView.css */
-.map {
-    max-width: 100%;
-    height: auto;
-  }
-  
-  .shown {
-    display: block;
-  }
-  
-  .hidden {
-    display: none;
-  }
-  
+.hidden {
+  display: none !important; /* Use !important to ensure it overrides other styles */
+}
+
+.shown {
+  display: block !important; /* Use !important to ensure it overrides other styles */
+}

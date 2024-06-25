@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from "react";
-import { ReactComponent as MySvg } from "../utils/svgs/mas.svg";
 import 'bootstrap/dist/css/bootstrap.min.css'; // Ensure Bootstrap CSS is imported
 import "../utils/styling/MapView.css"; // Assuming this file might still contain other necessary custom styles
 
@@ -15,34 +14,59 @@ function MapView() {
     Masjid_to_KPI: false,
   });
 
-  const svgRef = useRef(null);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const objectRef = useRef(null);
 
   useEffect(() => {
-    const svg = svgRef.current;
-    if (!svg) return;
+    const svgObject = objectRef.current;
+    if (!svgObject) return;
+
+    const onLoad = () => {
+      setIsLoaded(true);
+    };
+
+    svgObject.addEventListener("load", onLoad);
+    return () => {
+      svgObject.removeEventListener("load", onLoad);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!isLoaded) return;
+
+    const svgObject = objectRef.current;
+    const svgDocument = svgObject.contentDocument;
+    if (!svgDocument) {
+      console.error('SVG document could not be accessed');
+      return;
+    }
 
     Object.entries(visibility).forEach(([key, visible]) => {
-      const element = svg.getElementById(key);
+      const element = svgDocument.getElementById(key);
       if (element) {
-        element.setAttribute("class", visible ? "shown" : "hidden");
+        element.style.display = visible ? "block" : "none";
       }
     });
-  }, [visibility]);
+  }, [visibility, isLoaded]);
 
   const toggleVisibility = (id) => {
     setVisibility((prev) => {
       const newState = {};
       Object.keys(prev).forEach((key) => {
-        newState[key] = false; // Turn off all toggles
+        newState[key] = key === id ? !prev[id] : false;
       });
-      newState[id] = !prev[id]; // Toggle the clicked one
       return newState;
     });
   };
 
   return (
     <div className="container text-center my-3">
-      <MySvg ref={svgRef} className="map mb-3" />
+      <object
+        ref={objectRef}
+        type="image/svg+xml"
+        data="/mas.svg"
+        className="map mb-3"
+      />
       <div className="d-flex flex-wrap justify-content-center">
         {Object.keys(visibility).map((key) => (
           <div key={key} className="form-check form-switch m-2">
